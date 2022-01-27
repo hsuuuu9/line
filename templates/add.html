@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <center>
+    <p>
+      hello! {{ user }}
+    </p>
+
+    <br>  <br>  <br>
+    <p>add friends</p>
+
+  <br>  <br>  <br>
+    <form action="" method="post">
+      <br>
+      <p>業種名</p>
+      <select name="job">
+        {% for l in ll %}
+        <option value="{{ l }}">{{ l }}</option>
+        <br>
+        {% endfor %}
+      </select>
+      <br><br>
+      <p>県名</p>
+      <select name="place">
+        {% for p in pp %}
+        <option value="{{ p }}">{{ p }}</option>
+        <br>
+        {% endfor %}
+        <option value="all">全部</option>
+        <br>
+      </select>
+      <br><br>
+      <p>友達数</p>
+      <input type="text" placeholder="min" name="friends1">～
+      <input type="text" placeholder="max" name="friends2">人
+      <br><br>
+      <button type="submit" >add friends</button>
+
+      <br><br><br>
+      <a href="/line/command">back</a>
+
+    </form>
+  </center>
+</body>
+</html>

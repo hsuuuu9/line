@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <center>
+
+    <br><br><br>
+
+    <table border="1" bordercolor="black">
+      <tr>
+        <th><p>id</p></th>
+        <th><p>name</p></th>
+        <th><p>line_name</p></th>
+        <th><p>store_url</p></th>
+        <th><p>tel</p></th>
+        <th><p>address</p></th>
+        <th><p>prefecture</p></th>
+        <th><p>profile</p></th>
+        <th><p>friends</p></th>
+      </tr>
+
+      {% for i in range(length) %}
+      <tr>
+        <th><p>{{ df['id'][i] }}</p></th>
+        <th><p>{{ df['name'][i] }}</p></th>
+        <th><p>{{ df['line_name'][i] }}</p></th>
+        <th><p>{{ df['store_url'][i] }}</p></th>
+        <th><p>{{ df['tel'][i] }}</p></th>
+        <th><p>{{ df['address'][i] }}</p></th>
+        <th><p>{{ df['prefecture'][i] }}</p></th>
+        <th><p>{{ df['profile'][i] }}</p></th>
+        <th><p>{{ df['friends'][i] }}</p></th>
+      </tr>
+      <br>
+      {% endfor %}
+
+
+
+    <br><br><br><br><br><br><br>
+
+
+
+    <a href="/line/command/check">back</a>
+
+
+  </center>
+</body>
+
+</html>
