@@ -15,6 +15,8 @@
     <br>  <br>  <br>
     <p>send messege</p>
 
+    {% if status == 'free' %}
+
   <br>
       <br>
       <p>送信可能な業種</p>
@@ -28,6 +30,14 @@
 
 
       <br><br><br>
+      {% elif status == 'using' %}
+      <p>現在サーバー使用中です　しばらくお待ちください</p>
+
+      {% else %}
+      <p>不明なエラー　運営にお問い合わせください</p>
+
+
+      {% endif %}
 
       <br><br><br>
       <a href="/line/command">back</a>

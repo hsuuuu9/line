@@ -16,6 +16,7 @@
     <p>add friends</p>
 
   <br>  <br>  <br>
+  {% if status == 'free' %}
     <form action="" method="post">
       <br>
       <p>業種名</p>
@@ -40,9 +41,18 @@
       <button type="submit" >add friends</button>
 
       <br><br><br>
-      <a href="/line/command">back</a>
 
     </form>
+
+    {% elif status == 'using' %}
+    <p>現在サーバー使用中です　しばらくお待ちください</p>
+
+    {% else %}
+    <p>不明なエラー　運営にお問い合わせください</p>
+
+    {% endif %}
+    <br><br>
+    <a href="/line/command">back</a>
   </center>
 </body>
 </html>

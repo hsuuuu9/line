@@ -1,14 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
-import tweepy
 import random
 import copy
 import re
-import openpyxl
 from flask import Flask, request, Response, abort, render_template,session
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
 from collections import defaultdict
 from sqlalchemy import create_engine
-from requests_oauthlib import OAuth1Session
 import pandas as pd
 import pymysql
 import datetime
@@ -206,6 +203,9 @@ def collect_get():
     conn = create_engine('mysql+pymysql://{user}:{password}@{host}:{port}/{database}'.format(host = url_sql.hostname, port=url_sql.port, user = url_sql.username, password= url_sql.password, database = url_sql.path[1:]))
 
     user = session['username']
+    letter_s = 'select * from server where IP = "172.105.230.158"'
+    df_s = pd.read_sql(letter_s,conn)
+    status = df_s['status'][0]
     letter = 'select * from tables'
     df = pd.read_sql(letter,conn)
     jp = []
@@ -218,7 +218,7 @@ def collect_get():
 
     length = (len(df))
 
-    return render_template('collect.html',user=user,jp=jp,en=en,length = length,pp=pre_list)
+    return render_template('collect.html',user=user,jp=jp,en=en,length = length,pp=pre_list,status=status)
 
 @app.route("/line/command/collect", methods=["POST"])
 def collect_post():
@@ -256,7 +256,14 @@ def add_get():
     url_sql = urlparse(db_path)
     conn = create_engine('mysql+pymysql://{user}:{password}@{host}:{port}/{database}'.format(host = url_sql.hostname, port=url_sql.port, user = url_sql.username, password= url_sql.password, database = url_sql.path[1:]))
 
+
     user = session['username']
+
+    df_user = pd.read_sql('select * from user_list where userid = "'+user+'"',conn)
+    IP = df_user['SERVER_IP'][0]
+    letter_s = 'select * from server where IP = "'+IP+'"'
+    df_s = pd.read_sql(letter_s,conn)
+    status = df_s['status'][0]
     letter = 'select * from tables'
     df = pd.read_sql(letter,conn)
     length = len(df)
@@ -265,7 +272,7 @@ def add_get():
         ll.append(df['japanese'][i])
 
 
-    return render_template('add.html',user=user,ll=ll,pp=pre_list)
+    return render_template('add.html',user=user,ll=ll,pp=pre_list,status=status)
 
 @app.route("/line/command/add", methods=["POST"])
 def add_post():
@@ -277,7 +284,6 @@ def add_post():
     user = session['username']
     job = request.form.get("job")
     place = request.form.get("place")
-    user = 'shuichi'
     df_user = pd.read_sql('select * from user_list where userid = "'+user+'"',conn)
     IP = df_user['SERVER_IP'][0]
     Password = df_user['SERVER_PASS'][0]
@@ -307,6 +313,11 @@ def send_get():
     conn = create_engine('mysql+pymysql://{user}:{password}@{host}:{port}/{database}'.format(host = url_sql.hostname, port=url_sql.port, user = url_sql.username, password= url_sql.password, database = url_sql.path[1:]))
 
     user = session['username']
+    df_user = pd.read_sql('select * from user_list where userid = "'+user+'"',conn)
+    IP = df_user['SERVER_IP'][0]
+    letter_s = 'select * from server where IP = "'+IP+'"'
+    df_s = pd.read_sql(letter_s,conn)
+    status = df_s['status'][0]
     letter = 'select * from stock where username = "'+user+'"'
     df = pd.read_sql(letter,conn)
     choice = []
@@ -322,12 +333,13 @@ def send_get():
     length = len(df)
 
 
-    return render_template('send.html',user=user,last=last,nn=nn,length=length)
+    return render_template('send.html',user=user,last=last,nn=nn,length=length,status=status)
 
 @app.route("/line/command/send/<name>", methods=["GET"])
 @login_required
 def detail(name):
     user = session['username']
+
     letter = 'select distinct * from stock where username = "'+user+'" and tablename = "'+name+'" '
     print(letter)
     df = pd.read_sql(letter,conn)

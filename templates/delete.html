@@ -17,7 +17,7 @@
       <p>タイトル / 内容</p>
       <select name="title">
         {% for i in range(length_m) %}
-        <option value="{{ title[i] }}">{{ title[i] }}     /    {{ messege[i] }}</option>
+        <option value="{{ title[i] }}">{{ title[i] }} / {{ messege[i] }}</option>
         <br>
         {% endfor %}
       </select>
@@ -29,7 +29,7 @@
     </form>
     <br><br><br>
 
-        <a href="/line/command">back</a>
+    <a href="/line/command">back</a>
 
   </center>
 </body>

@@ -20,6 +20,7 @@
     </p>
     <br>
 
+    {% if status == 'free' %}
 
     <form action="" method="post">
       <br>
@@ -41,17 +42,28 @@
       </select>
       <br><br>
       <p>細かい住所</p><br>
-	<input type="text" placeholder="港区" name="detail" required>
+      <input type="text" placeholder="港区" name="detail" required>
 
 
       <br><br><br><br>
       <button type="submit" class="btn btn-primary btn-block">collect list</button>
 
     </form>
-<br><br><br>
+    <br><br><br>
 
+
+
+    {% elif status == 'using' %}
+    <p>現在サーバー使用中です　しばらくお待ちください</p>
+
+    {% else %}
+    <p>不明なエラー　運営にお問い合わせください</p>
+
+
+    {% endif %}
+    <br><br>
     <a href="/line/command">back</a>
-<br><br><br>
+    <br><br><br>
 
   </center>
 </body>
