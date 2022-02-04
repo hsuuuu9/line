@@ -15,28 +15,17 @@
     <br>  <br>  <br>
     <p>send messege</p>
 
-  <br>  <br>  <br>
-    <form action="" method="post">
+  <br>
       <br>
-      <p>業種名</p>
-      <select name="job">
-        {% for l in ll %}
-        <option value="{{ l }}">{{ l }}</option>
-        <br>
+      <p>送信可能な業種</p>
+  <br>  <br>
+        {% for i in range(length) %}
+        <a href="/line/command/send/{{ last[i] }}">{{ nn[i] }}</a>
+        <br><br>
         {% endfor %}
-      </select>
-      <br><br>
-      <p>県名</p>
-      <select name="place">
-        {% for p in pp %}
-        <option value="{{ p }}">{{ p }}</option>
-        <br>
-        {% endfor %}
-        <option value="all">全部</option>
-        <br>
-      </select>
-<br><br><br>
-      <button type="submit" >send messege</button>
+
+
+
 
       <br><br><br>
 

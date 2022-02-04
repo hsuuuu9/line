@@ -10,45 +10,37 @@
 
 <body>
   <center>
+    <br><br><br><br><br><br>
+    <form action="" method="post">
+      <br>
+      <p>{{ jap }}</p>
+      <p>送信先 / 送信数</p>
+      <select name="place">
+        {% for i in range(length) %}
+        <option value="{{ pl[i] }}">{{ pl[i] }} / {{ dic[pl[i]] }}店舗</option>
+        <br>
+        {% endfor %}
+      </select>
+      <br><br>
 
+      <select name="messege">
+        {% for i in range(length_m) %}
+        <option value="{{ messege[i] }}">{{ title[i] }}</option>
+        <br>
+        {% endfor %}
+      </select>
+      <br><br>
+
+
+
+
+      <br><br>
+      <button type="submit" class="btn btn-primary btn-block">send messege</button>
+
+    </form>
     <br><br><br>
 
-    <table border="1" bordercolor="black">
-      <tr>
-        <th><p>id</p></th>
-        <th><p>name</p></th>
-        <th><p>line_name</p></th>
-        <th><p>store_url</p></th>
-        <th><p>tel</p></th>
-        <th><p>address</p></th>
-        <th><p>prefecture</p></th>
-        <th><p>profile</p></th>
-        <th><p>friends</p></th>
-      </tr>
-
-      {% for i in range(length) %}
-      <tr>
-        <th><p>{{ df['id'][i] }}</p></th>
-        <th><p>{{ df['name'][i] }}</p></th>
-        <th><p>{{ df['line_name'][i] }}</p></th>
-        <th><p>{{ df['store_url'][i] }}</p></th>
-        <th><p>{{ df['tel'][i] }}</p></th>
-        <th><p>{{ df['address'][i] }}</p></th>
-        <th><p>{{ df['prefecture'][i] }}</p></th>
-        <th><p>{{ df['profile'][i] }}</p></th>
-        <th><p>{{ df['friends'][i] }}</p></th>
-      </tr>
-      <br>
-      {% endfor %}
-
-
-
-    <br><br><br><br><br><br><br>
-
-
-
-    <a href="/line/command/check">back</a>
-
+        <a href="/line/command/send">back</a>
 
   </center>
 </body>

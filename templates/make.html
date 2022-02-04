@@ -16,7 +16,7 @@
     <br>
 
     <p>
-      collect list▽
+      make messege▽
     </p>
     <br>
 
@@ -31,22 +31,27 @@
         {% endfor %}
       </select>
       <br><br>
+      <p>タイトル</p><br>
+  <input type="text" placeholder="美容院　関東 丁寧" name="title" required>
+  <br><br>
+      <p>送信する文章</p>
+      <br>
+      <textarea rows="10" cols="60" name="messege" required>
+{store}様
+{place}にある{job}にメッセージを送信しています
 
-      <p>県名</p>
-      <select name="place">
-        {% for p in pp %}
-        <option value="{{ p }}">{{ p }}</option>
-        <br>
-        {% endfor %}
-      </select>
+本文開始、、、
+
+      </textarea>
       <br><br>
-      <p>細かい住所</p><br>
-	<input type="text" placeholder="港区" name="detail" required>
+      <p>店名 = {store}</p>
+      <p>県名 = {place}</p>
+      <p>業種 = {job}</p>
 
+      <br><br>
+      <button type="submit" class="btn btn-primary btn-block">add template</button>
 
-      <br><br><br><br>
-      <button type="submit" class="btn btn-primary btn-block">collect list</button>
-
+<br><br>
     </form>
 <br><br><br>
 

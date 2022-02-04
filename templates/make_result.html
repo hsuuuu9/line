@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,18 +10,28 @@
 
 <body>
   <center>
+    <p>
+      hello! {{ user }}
+    </p>
+    <br>
 
+    <p>
+      以下の文章を保存しました▽
+    </p>
+    <br>
+    <p>タイトル: {{ title }} </p>
     <br><br><br>
 
-    <p>{{ place }}の{{ job }}:{{ num }}店舗をフレンド追加します　LINEをご確認ください</p>
+
+      {% for i in range(length) %}
+      <p>{{ m[i] }}</p>
+      <br>
+      {% endfor %}
 
 
 
     <br><br><br>
-
-
-
-    <a href="/line/command/add">back</a>
+    <a href="/line/command/make">back</a>
 
 
   </center>

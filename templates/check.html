@@ -10,21 +10,46 @@
 
 <body>
   <center>
+    <p>
+      hello! {{ user }}
+    </p>
+    <br>
 
-    <br><br><br>
-
-    {% for i in range(length) %}
-    <a href="check/{{ uu[i] }}">{{ ll[i] }}</a>
-    <br><br>
-    {% endfor %}
-
-
-
-    <br><br><br><br><br><br><br>
+    <p>
+      count list▽
+    </p>
+    <br>
 
 
+    <form action="" method="post">
+      <br>
+      <p>業種名</p>
+      <select name="job">
+        {% for i in range(length) %}
+        <option value="{{ en[i] }}">{{ jp[i] }}</option>
+        <br>
+        {% endfor %}
+      </select>
+      <br><br>
+
+      <p>県名</p>
+      <select name="place">
+        {% for p in pp %}
+        <option value="{{ p }}">{{ p }}</option>
+        <br>
+        {% endfor %}
+        <option value="全国">全国</option>
+        <br>
+      </select>
+
+      <br><br><br><br>
+      <button type="submit" class="btn btn-primary btn-block">count list</button>
+
+    </form>
+<br><br><br>
 
     <a href="/line/command">back</a>
+<br><br><br>
 
 
   </center>
