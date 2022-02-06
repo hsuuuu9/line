@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/css/main.css">
+  <title>Document</title>
+</head>
+<body>
+  <center>
+    <br><br><br>
+    <p>
+      hello! {{ user }}
+    </p>
+    <br>
+
+    <p>
+      list▽
+    </p>
+    <br>
+
+    <br>
+
+    <a href="/line/command">back</a>
+      <br><br><br><br>
+      <a href="/line/command/matome/download">csv download</a>
+  <br><br><br><br>
+    <p>↓下の方にある</p>
+
+    <table border="1" bordercolor="black">
+      <tr>
+        <th><p>name</p></th>
+        <th><p>store_url</p></th>
+        <th><p>tel</p></th>
+        <th><p>address</p></th>
+        <th><p>prefecture</p></th>
+        <th><p>profile</p></th>
+        <th><p>friends</p></th>
+        <th><p>send_unix</p></th>
+      </tr>
+
+      {% for i in range(length) %}
+      <tr>
+        <th><p>{{ final[i][0] }}</p></th>
+        <th><p>{{ final[i][1] }}</p></th>
+        <th><p>{{ final[i][2] }}</p></th>
+        <th><p>{{ final[i][3] }}</p></th>
+        <th><p>{{ final[i][4] }}</p></th>
+        <th><p>{{ final[i][5] }}</p></th>
+        <th><p>{{ final[i][6] }}</p></th>
+        <th><p>{{ final[i][7] }}</p></th>
+      </tr>
+
+      <br>
+      {% endfor %}
+
+
+
+  </table>
+
+
+
+
+  </center>
+</body>
+
+<style>
+table{
+  margin-top:-60px;
+}
+</style>
+</html>

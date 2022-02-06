@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import random
 import copy
 import re
-from flask import Flask, request, Response, abort, render_template,session
+from flask import Flask, request, Response, abort, render_template,session,make_response
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
 from collections import defaultdict
 from sqlalchemy import create_engine
@@ -11,7 +11,9 @@ import pymysql
 import datetime
 import paramiko
 from urllib.parse import urlparse,parse_qsl
-
+import requests
+from io import StringIO
+import csv
 pymysql.install_as_MySQLdb()
 db_path = "mysql://shuichi47:V3BtyW&U@172.104.91.29:3306/Line"
 url_sql = urlparse(db_path)
@@ -492,6 +494,114 @@ def edit_post():
 
 
     return render_template('delete_result.html',title=title)
+
+
+
+@app.route("/line/command/request", methods=["GET"])
+@login_required
+def requestq():
+
+    user = session['username']
+
+    return render_template('request.html',user=user)
+
+
+
+@app.route("/line/command/request", methods=["POST"])
+@login_required
+def request_post():
+    pymysql.install_as_MySQLdb()
+    db_path = "mysql://shuichi47:V3BtyW&U@172.104.91.29:3306/Line"
+    url_sql = urlparse(db_path)
+    conn = create_engine('mysql+pymysql://{user}:{password}@{host}:{port}/{database}'.format(host = url_sql.hostname, port=url_sql.port, user = url_sql.username, password= url_sql.password, database = url_sql.path[1:]))
+
+    user = session['username']
+    messege = request.form.get("messege")
+    token = "L0ceBizfHFMWESeszVF8cmtr1fOy1jNww2NA1hFkNJ6"
+    url = "https://notify-api.line.me/api/notify"
+    headers = {'Authorization': 'Bearer ' + token}
+    payload = {'message': user + ':' + messege}
+    r = requests.post(url, headers=headers, params=payload,)
+
+
+    return render_template('request_result.html')
+
+@app.route("/line/command/matome")
+@login_required
+def matome():
+    pymysql.install_as_MySQLdb()
+    db_path = "mysql://shuichi47:V3BtyW&U@172.104.91.29:3306/Line"
+    url_sql = urlparse(db_path)
+    conn = create_engine('mysql+pymysql://{user}:{password}@{host}:{port}/{database}'.format(host = url_sql.hostname, port=url_sql.port, user = url_sql.username, password= url_sql.password, database = url_sql.path[1:]))
+
+    user = session['username']
+
+    letter = 'select * from tables'
+    df = pd.read_sql(letter,conn)
+
+    dic = {}
+
+    for i in range(len(df)):
+        dic[df['table_name'][i]] = pd.read_sql('select distinct * from ' + df['table_name'][i],conn)
+
+    letter_u = 'select * from user_' + user + ' where send_unix > 1 '
+    df_u = pd.read_sql(letter_u,conn)
+
+    final = []
+    for i in range(len(df_u)):
+        df_t = dic[df_u['job'][i]]
+        df_f = df_t[df_t['id'] == df_u['id'][i]]
+        final.append([df_f['name'][df_f.index[0]],df_f['store_url'][df_f.index[0]],df_f['tel'][df_f.index[0]],df_f['address'][df_f.index[0]],df_f['prefecture'][df_f.index[0]],df_f['profile'][df_f.index[0]],df_f['friends'][df_f.index[0]],str(datetime.datetime.fromtimestamp(df_u['send_unix'][i]))[5:]])
+    length = len(final)
+
+
+
+    return render_template('matome.html',final=final,user=user,length=length)
+
+@app.route('/line/command/matome/download')
+def download():
+    pymysql.install_as_MySQLdb()
+    db_path = "mysql://shuichi47:V3BtyW&U@172.104.91.29:3306/Line"
+    url_sql = urlparse(db_path)
+    conn = create_engine('mysql+pymysql://{user}:{password}@{host}:{port}/{database}'.format(host = url_sql.hostname, port=url_sql.port, user = url_sql.username, password= url_sql.password, database = url_sql.path[1:]))
+
+    user = session['username']
+
+    letter = 'select * from tables'
+    df = pd.read_sql(letter,conn)
+
+    dic = {}
+
+    for i in range(len(df)):
+        dic[df['table_name'][i]] = pd.read_sql('select distinct * from ' + df['table_name'][i],conn)
+
+    letter_u = 'select * from user_' + user + ' where send_unix > 1 '
+    df_u = pd.read_sql(letter_u,conn)
+
+    final = []
+    for i in range(len(df_u)):
+        df_t = dic[df_u['job'][i]]
+        df_f = df_t[df_t['id'] == df_u['id'][i]]
+        final.append([df_f['name'][df_f.index[0]],df_f['store_url'][df_f.index[0]],df_f['tel'][df_f.index[0]],df_f['address'][df_f.index[0]],df_f['prefecture'][df_f.index[0]],df_f['profile'][df_f.index[0]],df_f['friends'][df_f.index[0]],str(datetime.datetime.fromtimestamp(df_u['send_unix'][i]))[5:]])
+    length = len(final)
+
+    f = StringIO()
+    writer = csv.writer(f, quotechar='"', quoting=csv.QUOTE_ALL, lineterminator="\n")
+
+
+    writer.writerow(['name','store_url','tel','address','prefecture','profile','friends','send_unix'])
+    for i in range(length):
+        tmp = []
+        for j in range(8):
+            tmp.append(final[i][j])
+        writer.writerow(tmp)
+
+    res = make_response()
+    res.data = f.getvalue()
+    obj = 'line_' + user
+    res.headers['Content-Type'] = 'text/csv'
+    res.headers['Content-Disposition'] = 'attachment; filename='+ obj +'.csv'
+    return res
 
 
 if __name__ == '__main__':
