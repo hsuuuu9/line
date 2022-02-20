@@ -23,83 +23,7 @@ conn = create_engine('mysql+pymysql://{user}:{password}@{host}:{port}/{database}
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
-pre_list = ['北海道',
-'青森県',
-'岩手県',
-'宮城県',
-'秋田県',
-'山形県',
-'福島県',
-'茨城県',
-'栃木県',
-'群馬県',
-'埼玉県',
-'千葉県',
-'東京都 千代田区',
-'東京都 中央区',
-'東京都 港区',
-'東京都 新宿区',
-'東京都 文京区',
-'東京都 台東区',
-'東京都 墨田区',
-'東京都 江東区',
-'東京都 品川区',
-'東京都 目黒区',
-'東京都 大田区',
-'東京都 世田谷区',
-'東京都 渋谷区',
-'東京都 中野区',
-'東京都 杉並区',
-'東京都 豊島区',
-'東京都 北区',
-'東京都 荒川区',
-'東京都 板橋区',
-'東京都 練馬区',
-'東京都 足立区',
-'東京都 葛飾区',
-'東京都 江戸川区',
-'神奈川県 横浜市',
-'神奈川県 川崎市',
-'神奈川県 相模原市',
-'神奈川県 横須賀市',
-'神奈川県 藤沢市',
-'新潟県',
-'富山県',
-'石川県',
-'福井県',
-'山梨県',
-'長野県',
-'岐阜県',
-'静岡県',
-'愛知県',
-'三重県',
-'滋賀県',
-'京都府',
-'大阪府 大阪市',
-'大阪府 堺市',
-'大阪府 東大阪市',
-'大阪府 豊中市',
-'大阪府 枚方市',
-'兵庫県',
-'奈良県',
-'和歌山県',
-'鳥取県',
-'島根県',
-'岡山県',
-'広島県',
-'山口県',
-'徳島県',
-'香川県',
-'愛媛県',
-'高知県',
-'福岡県',
-'佐賀県',
-'長崎県',
-'熊本県',
-'大分県',
-'宮崎県',
-'鹿児島県',
-'沖縄県']
+
 
 
 class User(UserMixin):
@@ -179,7 +103,17 @@ def logout():
 def command_get():
     user = session['username']
 
-    return render_template('command.html',screen_name=user)
+    letter = 'select * from user_'+user
+
+    df_uu = pd.read_sql(letter,conn)
+    count = 0
+    for i in range(len(df_uu)):
+        if df_uu['send_unix'][i] != 0:
+            count += 1
+
+
+
+    return render_template('command.html',screen_name=user,count = count)
 
 
 @app.route("/line/command/check", methods=["GET"])
@@ -189,7 +123,10 @@ def check_get():
     db_path = "mysql://shuichi47:V3BtyW&U@172.104.91.29:3306/Line"
     url_sql = urlparse(db_path)
     conn = create_engine('mysql+pymysql://{user}:{password}@{host}:{port}/{database}'.format(host = url_sql.hostname, port=url_sql.port, user = url_sql.username, password= url_sql.password, database = url_sql.path[1:]))
-
+    pre_list = []
+    df_p = pd.read_sql('select * from place_list ORDER BY place',conn)
+    for i in range(len(df_p)):
+        pre_list.append(df_p['place'][i])
     user = session['username']
     letter = 'select * from tables'
     df = pd.read_sql(letter,conn)
@@ -235,7 +172,10 @@ def collect_get():
     db_path = "mysql://shuichi47:V3BtyW&U@172.104.91.29:3306/Line"
     url_sql = urlparse(db_path)
     conn = create_engine('mysql+pymysql://{user}:{password}@{host}:{port}/{database}'.format(host = url_sql.hostname, port=url_sql.port, user = url_sql.username, password= url_sql.password, database = url_sql.path[1:]))
-
+    pre_list = []
+    df_p = pd.read_sql('select * from place_list ORDER BY place',conn)
+    for i in range(len(df_p)):
+        pre_list.append(df_p['place'][i])
     user = session['username']
     letter_s = 'select * from server where IP = "172.105.230.158"'
     df_s = pd.read_sql(letter_s,conn)
@@ -251,7 +191,7 @@ def collect_get():
         en.append(df['table_name'][i])
 
     length = (len(df))
-    
+
 
     return render_template('collect.html',user=user,jp=jp,en=en,length = length,pp=pre_list,status=status)
 
@@ -266,6 +206,10 @@ def collect_post():
     job = request.form.get("job")
     place = request.form.get("place")
     detail = request.form.get("detail")
+
+    ppp = place + ' ' + detail
+
+    conn.execute('insert into place_list values("'+ppp+'")')
 
     df = pd.read_sql('select * from tables',conn)
     jap = df[df['table_name'] == job]['japanese'][df[df['table_name'] == job].index[0]]
@@ -291,7 +235,10 @@ def add_get():
     url_sql = urlparse(db_path)
     conn = create_engine('mysql+pymysql://{user}:{password}@{host}:{port}/{database}'.format(host = url_sql.hostname, port=url_sql.port, user = url_sql.username, password= url_sql.password, database = url_sql.path[1:]))
 
-
+    pre_list = []
+    df_p = pd.read_sql('select * from place_list ORDER BY place',conn)
+    for i in range(len(df_p)):
+        pre_list.append(df_p['place'][i])
     user = session['username']
 
     df_user = pd.read_sql('select * from user_list where userid = "'+user+'"',conn)
@@ -366,7 +313,6 @@ def send_get():
         jap = df[df['table_name'] == la]['japanese'][df[df['table_name'] == la].index[0]]
         nn.append(jap)
     length = len(df)
-
 
     return render_template('send.html',user=user,last=last,nn=nn,length=length,status=status)
 
