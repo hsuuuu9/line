@@ -322,9 +322,7 @@ def detail(name):
     user = session['username']
 
     letter = 'select distinct * from stock where username = "'+user+'" and tablename = "'+name+'" '
-    print(letter)
     df = pd.read_sql(letter,conn)
-    print(len(df))
     length = len(df)
     pl = []
     for i in range(length):
@@ -332,8 +330,16 @@ def detail(name):
 
     df_a = pd.read_sql('select * from '+name,conn)
     dic = {}
+
+    pre_list = []
+    df_p = pd.read_sql('select * from place_list ORDER BY place',conn)
+    for i in range(len(df_p)):
+        pre_list.append(df_p['place'][i])
+
     for pre in pre_list:
         dic[pre] = len(df_a[df_a['prefecture'] == pre])
+
+
 
     df = pd.read_sql('select * from tables',conn)
     jap = df[df['table_name'] == name]['japanese'][df[df['table_name'] == name].index[0]]
