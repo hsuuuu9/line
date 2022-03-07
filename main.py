@@ -236,7 +236,7 @@ def add_get():
     conn = create_engine('mysql+pymysql://{user}:{password}@{host}:{port}/{database}'.format(host = url_sql.hostname, port=url_sql.port, user = url_sql.username, password= url_sql.password, database = url_sql.path[1:]))
 
     pre_list = []
-    df_p = pd.read_sql('select * from place_list ORDER BY place',conn)
+    df_p = pd.read_sql('select distinct * from place_list ORDER BY place',conn)
     for i in range(len(df_p)):
         pre_list.append(df_p['place'][i])
     user = session['username']
